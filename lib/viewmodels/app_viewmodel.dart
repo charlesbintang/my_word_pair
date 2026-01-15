@@ -35,10 +35,10 @@ class MyAppState extends ChangeNotifier {
 
     if (favorites.contains(target)) {
       favorites.remove(target);
-      print('${target.asLowerCase} removed from favorites');
+      debugPrint('${target.asLowerCase} removed from favorites');
     } else {
       favorites.add(target);
-      print('${target.asLowerCase} added to favorites');
+      debugPrint('${target.asLowerCase} added to favorites');
 
       // Kirim ke backend dengan category "favorites"
       _wordPairService.createWordPair(pair: target, category: 'favorites');

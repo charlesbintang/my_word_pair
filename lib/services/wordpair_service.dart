@@ -43,12 +43,14 @@ class WordPairService {
       );
 
       if (response.statusCode != 201) {
-        print(
+        debugPrint(
           'Error creating word pair: ${response.statusCode} - ${response.body}',
         );
+      } else {
+        debugPrint('Created successfully');
       }
     } catch (e) {
-      print('Error calling API: $e');
+      debugPrint('Error calling API: $e');
       // Jangan throw error agar aplikasi tetap berjalan meski API gagal
     }
   }
