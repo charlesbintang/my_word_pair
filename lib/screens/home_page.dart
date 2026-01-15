@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'generator_page.dart';
+
 import 'favorites_page.dart';
+import 'generator_page.dart';
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -98,4 +101,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-

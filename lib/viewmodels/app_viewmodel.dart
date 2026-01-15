@@ -6,6 +6,7 @@ import '../services/wordpair_service.dart';
 class MyAppState extends ChangeNotifier {
   var current = WordPair.random();
   var history = <WordPair>[];
+  var isNotSavedLocally = true;
 
   GlobalKey? historyListKey;
 
@@ -13,13 +14,21 @@ class MyAppState extends ChangeNotifier {
 
   final WordPairService _wordPairService = WordPairService();
 
+  void changeSaveMethod() {
+    isNotSavedLocally = !isNotSavedLocally;
+
+    notifyListeners();
+  }
+
   void getNext() {
     history.insert(0, current);
     var animatedList = historyListKey?.currentState as AnimatedListState?;
     animatedList?.insertItem(0);
 
-    // Kirim ke backend dengan category "history"
-    _wordPairService.createWordPair(pair: current, category: 'history');
+    if (isNotSavedLocally) {
+      // Kirim ke backend dengan category "history"
+      _wordPairService.createWordPair(pair: current, category: 'history');
+    }
 
     current = WordPair.random();
     notifyListeners();
@@ -40,8 +49,10 @@ class MyAppState extends ChangeNotifier {
       favorites.add(target);
       debugPrint('${target.asLowerCase} added to favorites');
 
-      // Kirim ke backend dengan category "favorites"
-      _wordPairService.createWordPair(pair: target, category: 'favorites');
+      if (isNotSavedLocally) {
+        // Kirim ke backend dengan category "favorites"
+        _wordPairService.createWordPair(pair: target, category: 'favorites');
+      }
     }
 
     notifyListeners();
