@@ -1,6 +1,7 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 
+import '../data/entities/wordpair.dart';
 import '../services/wordpair_service.dart';
 
 class MyAppState extends ChangeNotifier {
@@ -32,6 +33,32 @@ class MyAppState extends ChangeNotifier {
 
     current = WordPair.random();
     notifyListeners();
+  }
+
+  /// Memuat favorites dari API berdasarkan category "favorites"
+  Future<void> loadFavorites() async {
+    try {
+      // Memanggil API dengan filter category=favorites
+      final List<WordPairEntity> wordPairs = await _wordPairService
+          .findAllWordPair(params: '?category=favorites');
+
+      // Konversi WordPairEntity ke WordPair dan filter hanya yang category="favorites"
+      final filteredFavorites = wordPairs
+          .where((entity) => entity.category == 'favorites')
+          .map((entity) {
+            // Membuat WordPair dari firstWord dan secondWord
+            // WordPair memiliki constructor yang menerima dua string
+            return WordPair(entity.firstWord, entity.secondWord);
+          })
+          .toList();
+
+      favorites = filteredFavorites;
+      debugPrint('Loaded ${favorites.length} favorites from API');
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error loading favorites: $e');
+      // Tetap biarkan aplikasi berjalan meski error
+    }
   }
 
   void removeFavorite(WordPair pair) {

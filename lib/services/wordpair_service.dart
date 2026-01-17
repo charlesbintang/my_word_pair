@@ -4,6 +4,7 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:my_word_pair/data/entities/wordpair.dart';
 
 class WordPairService {
   /// Mendapatkan base URL berdasarkan platform
@@ -46,12 +47,54 @@ class WordPairService {
         debugPrint(
           'Error creating word pair: ${response.statusCode} - ${response.body}',
         );
-      } else {
-        debugPrint('Created successfully');
       }
+      // else {
+      //   debugPrint('Created successfully');
+      // }
     } catch (e) {
       debugPrint('Error calling API: $e');
       // Jangan throw error agar aplikasi tetap berjalan meski API gagal
+    }
+  }
+
+  /// Mendapatkan semua data WordPair dari backend
+  Future<List<WordPairEntity>> findAllWordPair({String? params}) async {
+    try {
+      var url = WordPairService.baseUrl;
+      if (params != null && params.isNotEmpty) {
+        url = url + params;
+      }
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        // Parse JSON response
+        final List<dynamic> jsonList =
+            jsonDecode(response.body) as List<dynamic>;
+
+        // Convert setiap item JSON menjadi WordPairEntity
+        final List<WordPairEntity> wordPairs = jsonList
+            .map(
+              (json) => WordPairEntity.fromJson(json as Map<String, dynamic>),
+            )
+            .toList();
+
+        debugPrint(
+          'All data has been successfully retrieved: ${wordPairs.length} items',
+        );
+        return wordPairs;
+      } else {
+        debugPrint(
+          'Error find all word pair: ${response.statusCode} - ${response.body}',
+        );
+        return [];
+      }
+    } catch (e) {
+      debugPrint('Error calling API: $e');
+      // Return empty list jika terjadi error agar aplikasi tetap berjalan
+      return [];
     }
   }
 }

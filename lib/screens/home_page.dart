@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../viewmodels/app_viewmodel.dart';
 import 'favorites_page.dart';
 import 'generator_page.dart';
 
@@ -99,5 +101,15 @@ class _MyHomePageState extends State<MyHomePage> {
         },
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Memuat favorites dari API ketika home page pertama kali di-load
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final appState = context.read<MyAppState>();
+      appState.loadFavorites();
+    });
   }
 }
