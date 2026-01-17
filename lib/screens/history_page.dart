@@ -3,16 +3,16 @@ import 'package:provider/provider.dart';
 
 import '../viewmodels/my_app_state_viewmodel.dart';
 
-class FavoritesPage extends StatelessWidget {
-  const FavoritesPage({super.key});
+class HistoryPage extends StatelessWidget {
+  const HistoryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     var theme = Theme.of(context);
 
-    if (appState.favorites.isEmpty) {
-      return Center(child: const Text('No favorites yet.'));
+    if (appState.histories.isEmpty) {
+      return Center(child: const Text('No history yet.'));
     }
 
     return SafeArea(
@@ -24,7 +24,9 @@ class FavoritesPage extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Text("You have ${appState.favorites.length} favorites:"),
+              child: Text(
+                "You have ${appState.histories.length} history items:",
+              ),
             ),
             Expanded(
               child: GridView(
@@ -33,7 +35,7 @@ class FavoritesPage extends StatelessWidget {
                   childAspectRatio: 400 / 80,
                 ),
                 children: [
-                  for (var pair in appState.favorites)
+                  for (var pair in appState.histories)
                     ListTile(
                       leading: IconButton(
                         icon: Icon(
@@ -42,7 +44,7 @@ class FavoritesPage extends StatelessWidget {
                         ),
                         color: theme.colorScheme.primary,
                         onPressed: () {
-                          appState.removeFavorite(pair);
+                          appState.removeHistory(pair);
                         },
                       ),
                       title: Text(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../viewmodels/app_viewmodel.dart';
+import '../viewmodels/my_app_state_viewmodel.dart';
 import '../widgets/big_card.dart';
 import '../widgets/history_list_view.dart';
 

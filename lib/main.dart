@@ -3,7 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/home_page.dart';
-import 'viewmodels/app_viewmodel.dart';
+import 'viewmodels/my_app_state_viewmodel.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");

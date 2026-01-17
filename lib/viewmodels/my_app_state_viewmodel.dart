@@ -13,6 +13,9 @@ class MyAppState extends ChangeNotifier {
 
   var favorites = <WordPair>[];
 
+  /// Histories loaded from backend (category = 'history')
+  var histories = <WordPair>[];
+
   final WordPairService _wordPairService = WordPairService();
 
   void changeSaveMethod() {
@@ -59,6 +62,30 @@ class MyAppState extends ChangeNotifier {
       debugPrint('Error loading favorites: $e');
       // Tetap biarkan aplikasi berjalan meski error
     }
+  }
+
+  /// Memuat histories dari API berdasarkan category "history"
+  Future<void> loadHistories() async {
+    try {
+      final List<WordPairEntity> wordPairs = await _wordPairService
+          .findAllWordPair(params: '?category=history');
+
+      final filtered = wordPairs
+          .where((entity) => entity.category == 'history')
+          .map((entity) => WordPair(entity.firstWord, entity.secondWord))
+          .toList();
+
+      histories = filtered;
+      debugPrint('Loaded ${histories.length} histories from API');
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error loading histories: $e');
+    }
+  }
+
+  void removeHistory(WordPair pair) {
+    histories.remove(pair);
+    notifyListeners();
   }
 
   void removeFavorite(WordPair pair) {

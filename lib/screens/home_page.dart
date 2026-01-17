@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../viewmodels/app_viewmodel.dart';
+import '../viewmodels/my_app_state_viewmodel.dart';
 import 'favorites_page.dart';
 import 'generator_page.dart';
+import 'history_page.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -26,6 +27,9 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
       case 1:
         page = FavoritesPage(key: ValueKey('favorites'));
+        break;
+      case 2:
+        page = HistoryPage(key: ValueKey('history'));
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
@@ -60,6 +64,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       icon: Icon(Icons.favorite),
                       label: 'Favorites',
                     ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.history),
+                      label: 'History',
+                    ),
                   ],
                   currentIndex: selectedIndex,
                   onTap: (value) {
@@ -84,6 +92,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       NavigationRailDestination(
                         icon: Icon(Icons.favorite),
                         label: Text('Favorites'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.history),
+                        label: Text('History'),
                       ),
                     ],
                     selectedIndex: selectedIndex,
@@ -110,6 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final appState = context.read<MyAppState>();
       appState.loadFavorites();
+      appState.loadHistories();
     });
   }
 }
