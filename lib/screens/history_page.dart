@@ -29,8 +29,8 @@ class HistoryPage extends StatelessWidget {
             Expanded(
               child: GridView(
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 400,
-                  childAspectRatio: 400 / 80,
+                  maxCrossAxisExtent: 500,
+                  childAspectRatio: 500 / 80,
                 ),
                 children: [
                   for (var pair in appState.history)
