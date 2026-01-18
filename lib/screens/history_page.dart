@@ -49,6 +49,18 @@ class HistoryPage extends StatelessWidget {
                         "${pair.first.toLowerCase()} ${pair.second.toLowerCase()}",
                         semanticsLabel: "${pair.first} ${pair.second}",
                       ),
+                      trailing: IconButton(
+                        icon: Icon(
+                          appState.favorites.contains(pair)
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          semanticLabel: 'Like',
+                        ),
+                        color: theme.colorScheme.primary,
+                        onPressed: () {
+                          appState.toggleFavorite(pair: pair);
+                        },
+                      ),
                     ),
                 ],
               ),
