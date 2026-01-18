@@ -1,3 +1,4 @@
+import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -42,7 +43,11 @@ class HistoryPage extends StatelessWidget {
                         ),
                         color: theme.colorScheme.primary,
                         onPressed: () {
-                          appState.removeHistory(pair);
+                          _showDeleteConfirmationDialog(
+                            context,
+                            appState,
+                            pair,
+                          );
                         },
                       ),
                       title: Text(
@@ -68,6 +73,58 @@ class HistoryPage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _showDeleteConfirmationDialog(
+    BuildContext context,
+    MyAppState appState,
+    WordPair pair,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Hapus Item?'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Apakah Anda yakin ingin menghapus item ini?'),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  "${pair.first.toLowerCase()} ${pair.second.toLowerCase()}",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () {
+                appState.removeHistory(pair);
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.error,
+              ),
+              child: const Text('Hapus'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
