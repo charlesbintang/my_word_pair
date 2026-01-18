@@ -23,6 +23,17 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Menghapus item dengan id tertentu melalui API
+  Future<void> deleteWordPair(String id) async {
+    try {
+      await _wordPairService.deleteWordPair(id: id);
+
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error delete word pair: $e');
+    }
+  }
+
   void getNext() {
     history.insert(0, current);
     var animatedList = historyListKey?.currentState as AnimatedListState?;
@@ -87,8 +98,11 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeHistory(WordPair pair) {
+  void removeHistory(WordPair pair, {String? id}) {
     history.remove(pair);
+    if (id != null) {
+      deleteWordPair(id);
+    }
     notifyListeners();
   }
 

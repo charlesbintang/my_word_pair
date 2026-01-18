@@ -57,6 +57,25 @@ class WordPairService {
     }
   }
 
+  /// Menghapus word pair dari backend berdasarkan ID
+  Future<void> deleteWordPair({required String id}) async {
+    try {
+      final response = await http.delete(
+        Uri.parse('${WordPairService.baseUrl}/$id'),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode != 204) {
+        debugPrint(
+          'Error deleting word pair: ${response.statusCode} - ${response.body}',
+        );
+      }
+    } catch (e) {
+      debugPrint('Error calling API: $e');
+      // Jangan throw error agar aplikasi tetap berjalan meski API gagal
+    }
+  }
+
   /// Mendapatkan semua data WordPair dari backend
   Future<List<WordPairEntity>> findAllWordPair({String? params}) async {
     try {
