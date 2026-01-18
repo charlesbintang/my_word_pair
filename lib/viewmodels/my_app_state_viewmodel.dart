@@ -24,8 +24,19 @@ class MyAppState extends ChangeNotifier {
   }
 
   /// Menghapus item dengan id tertentu melalui API
-  Future<void> deleteWordPair(String id) async {
+  Future<void> deleteWordPair(WordPair pair) async {
     try {
+      // Cari WordPairEntity berdasarkan firstWord dan secondWord
+      final List<WordPairEntity> wordPairs = await _wordPairService
+          .findAllWordPair(
+            params: '?firstWord=${pair.first}&secondWord=${pair.second}',
+          );
+      if (wordPairs.isEmpty) {
+        debugPrint('WordPair not found in backend: ${pair.asLowerCase}');
+        return;
+      } // Asumsikan hanya ada satu entri unik
+      final String id = wordPairs.first.id;
+
       await _wordPairService.deleteWordPair(id: id);
 
       notifyListeners();
@@ -57,9 +68,9 @@ class MyAppState extends ChangeNotifier {
 
       // Konversi WordPairEntity ke WordPair dan filter hanya yang category="favorites"
       final filteredFavorites = wordPairs.map((entity) {
-            // Membuat WordPair dari firstWord dan secondWord
-            // WordPair memiliki constructor yang menerima dua string
-            return WordPair(entity.firstWord, entity.secondWord);
+        // Membuat WordPair dari firstWord dan secondWord
+        // WordPair memiliki constructor yang menerima dua string
+        return WordPair(entity.firstWord, entity.secondWord);
       }).toList();
 
       favorites = filteredFavorites;
@@ -94,11 +105,9 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeHistory(WordPair pair, {String? id}) {
+  void removeHistory(WordPair pair) {
     history.remove(pair);
-    if (id != null) {
-      deleteWordPair(id);
-    }
+    deleteWordPair(pair);
     notifyListeners();
   }
 
