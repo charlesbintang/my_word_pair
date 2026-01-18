@@ -99,7 +99,7 @@ class MyAppState extends ChangeNotifier {
       favorites.remove(target);
       debugPrint('${target.asLowerCase} removed from favorites');
     } else {
-      favorites.add(target);
+      favorites.insert(0, target);
       debugPrint('${target.asLowerCase} added to favorites');
 
       if (isNotSavedLocally) {
