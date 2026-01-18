@@ -56,14 +56,11 @@ class MyAppState extends ChangeNotifier {
           .findAllWordPair(params: '?category=favorites');
 
       // Konversi WordPairEntity ke WordPair dan filter hanya yang category="favorites"
-      final filteredFavorites = wordPairs
-          .where((entity) => entity.category == 'favorites')
-          .map((entity) {
+      final filteredFavorites = wordPairs.map((entity) {
             // Membuat WordPair dari firstWord dan secondWord
             // WordPair memiliki constructor yang menerima dua string
             return WordPair(entity.firstWord, entity.secondWord);
-          })
-          .toList();
+      }).toList();
 
       favorites = filteredFavorites;
       debugPrint('Loaded ${favorites.length} favorites from API');
@@ -81,7 +78,6 @@ class MyAppState extends ChangeNotifier {
           .findAllWordPair(params: '?category=history');
 
       final filtered = wordPairs
-          .where((entity) => entity.category == 'history')
           .map((entity) => WordPair(entity.firstWord, entity.secondWord))
           .toList();
 
