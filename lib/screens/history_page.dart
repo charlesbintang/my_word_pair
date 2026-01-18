@@ -11,7 +11,7 @@ class HistoryPage extends StatelessWidget {
     var appState = context.watch<MyAppState>();
     var theme = Theme.of(context);
 
-    if (appState.histories.isEmpty) {
+    if (appState.history.isEmpty) {
       return Center(child: const Text('No history yet.'));
     }
 
@@ -24,9 +24,7 @@ class HistoryPage extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Text(
-                "You have ${appState.histories.length} history items:",
-              ),
+              child: Text("You have ${appState.history.length} history items:"),
             ),
             Expanded(
               child: GridView(
@@ -35,7 +33,7 @@ class HistoryPage extends StatelessWidget {
                   childAspectRatio: 400 / 80,
                 ),
                 children: [
-                  for (var pair in appState.histories)
+                  for (var pair in appState.history)
                     ListTile(
                       leading: IconButton(
                         icon: Icon(

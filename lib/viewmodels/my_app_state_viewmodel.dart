@@ -6,7 +6,6 @@ import '../services/wordpair_service.dart';
 
 class MyAppState extends ChangeNotifier {
   var current = WordPair.random();
-  var history = <WordPair>[];
   var isNotSavedLocally = true;
 
   GlobalKey? historyListKey;
@@ -14,7 +13,7 @@ class MyAppState extends ChangeNotifier {
   var favorites = <WordPair>[];
 
   /// Histories loaded from backend (category = 'history')
-  var histories = <WordPair>[];
+  var history = <WordPair>[];
 
   final WordPairService _wordPairService = WordPairService();
 
@@ -75,21 +74,21 @@ class MyAppState extends ChangeNotifier {
           .map((entity) => WordPair(entity.firstWord, entity.secondWord))
           .toList();
 
-      histories = filtered;
-      debugPrint('Loaded ${histories.length} histories from API');
+      history = filtered;
+      debugPrint('Loaded ${history.length} histories from API');
       notifyListeners();
     } catch (e) {
       debugPrint('Error loading histories: $e');
     }
   }
 
-  void removeHistory(WordPair pair) {
-    histories.remove(pair);
+  void removeFavorite(WordPair pair) {
+    favorites.remove(pair);
     notifyListeners();
   }
 
-  void removeFavorite(WordPair pair) {
-    favorites.remove(pair);
+  void removeHistory(WordPair pair) {
+    history.remove(pair);
     notifyListeners();
   }
 
