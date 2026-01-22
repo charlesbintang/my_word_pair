@@ -130,4 +130,25 @@ class MyAppState extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  Future<void> updateCategoryWordPairToHistory(WordPair pair) async {
+    try {
+      // Cari WordPairEntity berdasarkan firstWord dan secondWord
+      final List<WordPairEntity> wordPairs = await _wordPairService
+          .findAllWordPair(
+            params: '?firstWord=${pair.first}&secondWord=${pair.second}',
+          );
+      if (wordPairs.isEmpty) {
+        debugPrint('WordPair not found in backend: ${pair.asLowerCase}');
+        return;
+      } // Asumsikan hanya ada satu entri unik
+      final String id = wordPairs.first.id;
+
+      await _wordPairService.updateWordPair(id: id, category: 'history');
+
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error updating word pair: $e');
+    }
+  }
 }
