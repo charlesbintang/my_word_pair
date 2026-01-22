@@ -102,6 +102,7 @@ class MyAppState extends ChangeNotifier {
 
   void removeFavorite(WordPair pair) {
     favorites.remove(pair);
+    debugPrint('${pair.asLowerCase} removed from favorites');
     notifyListeners();
   }
 
