@@ -27,10 +27,11 @@ class MyAppState extends ChangeNotifier {
   Future<void> deleteWordPair(WordPair pair) async {
     try {
       // Cari WordPairEntity berdasarkan firstWord dan secondWord
-      final List<WordPairEntity> wordPairs = await _wordPairService
-          .findAllWordPair(
-            params: '?firstWord=${pair.first}&secondWord=${pair.second}',
-          );
+      final List<WordPairEntity>
+      wordPairs = await _wordPairService.findAllWordPair(
+        params:
+            '?firstWord=${pair.first}&secondWord=${pair.second}&category=history',
+      );
       if (wordPairs.isEmpty) {
         debugPrint('WordPair not found in backend: ${pair.asLowerCase}');
         return;
@@ -101,14 +102,15 @@ class MyAppState extends ChangeNotifier {
   }
 
   void removeFavorite(WordPair pair) {
+    updateCategoryWordPairToHistory(pair);
     favorites.remove(pair);
     debugPrint('${pair.asLowerCase} removed from favorites');
     notifyListeners();
   }
 
   void removeHistory(WordPair pair) {
-    history.remove(pair);
     deleteWordPair(pair);
+    history.remove(pair);
     notifyListeners();
   }
 
@@ -116,6 +118,7 @@ class MyAppState extends ChangeNotifier {
     final target = pair ?? current;
 
     if (favorites.contains(target)) {
+      updateCategoryWordPairToHistory(target);
       favorites.remove(target);
       debugPrint('${target.asLowerCase} removed from favorites');
     } else {
@@ -134,10 +137,11 @@ class MyAppState extends ChangeNotifier {
   Future<void> updateCategoryWordPairToHistory(WordPair pair) async {
     try {
       // Cari WordPairEntity berdasarkan firstWord dan secondWord
-      final List<WordPairEntity> wordPairs = await _wordPairService
-          .findAllWordPair(
-            params: '?firstWord=${pair.first}&secondWord=${pair.second}',
-          );
+      final List<WordPairEntity>
+      wordPairs = await _wordPairService.findAllWordPair(
+        params:
+            '?firstWord=${pair.first}&secondWord=${pair.second}&category=favorites',
+      );
       if (wordPairs.isEmpty) {
         debugPrint('WordPair not found in backend: ${pair.asLowerCase}');
         return;
