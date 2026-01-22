@@ -116,4 +116,27 @@ class WordPairService {
       return [];
     }
   }
+
+  /// Mengubah category word pair dari backend berdasarkan ID
+  Future<void> updateWordPair({
+    required String id,
+    required String category,
+  }) async {
+    try {
+      final response = await http.patch(
+        Uri.parse('${WordPairService.baseUrl}/$id'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'category': category}),
+      );
+
+      if (response.statusCode != 200) {
+        debugPrint(
+          'Error update word pair: ${response.statusCode} - ${response.body}',
+        );
+      }
+    } catch (e) {
+      debugPrint('Error calling API: $e');
+      // Jangan throw error agar aplikasi tetap berjalan meski API gagal
+    }
+  }
 }
