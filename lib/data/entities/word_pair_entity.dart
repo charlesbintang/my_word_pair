@@ -1,5 +1,6 @@
 class WordPairEntity {
   final String id;
+  final String clientId;
   final String firstWord;
   final String secondWord;
   final String? category;
@@ -8,6 +9,7 @@ class WordPairEntity {
 
   WordPairEntity({
     required this.id,
+    required this.clientId,
     required this.firstWord,
     required this.secondWord,
     this.category,
@@ -19,6 +21,7 @@ class WordPairEntity {
   factory WordPairEntity.fromJson(Map<String, dynamic> json) {
     return WordPairEntity(
       id: json['id'] as String,
+      clientId: json['clientId'] as String,
       firstWord: json['firstWord'] as String,
       secondWord: json['secondWord'] as String,
       category: json['category'] as String?,
@@ -30,6 +33,7 @@ class WordPairEntity {
   /// Membuat copy dari WordPair dengan beberapa field yang bisa diubah
   WordPairEntity copyWith({
     String? id,
+    String? clientId,
     String? firstWord,
     String? secondWord,
     String? category,
@@ -38,6 +42,7 @@ class WordPairEntity {
   }) {
     return WordPairEntity(
       id: id ?? this.id,
+      clientId: clientId ?? this.clientId,
       firstWord: firstWord ?? this.firstWord,
       secondWord: secondWord ?? this.secondWord,
       category: category ?? this.category,
@@ -50,6 +55,7 @@ class WordPairEntity {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'clientId': clientId,
       'firstWord': firstWord,
       'secondWord': secondWord,
       'category': category,

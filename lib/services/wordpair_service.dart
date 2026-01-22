@@ -4,7 +4,7 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:my_word_pair/data/entities/wordpair.dart';
+import 'package:my_word_pair/data/entities/word_pair_entity.dart';
 
 class WordPairService {
   /// Mendapatkan base URL berdasarkan platform

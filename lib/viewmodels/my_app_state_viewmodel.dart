@@ -1,7 +1,7 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:my_word_pair/data/entities/word_pair_entity.dart';
 
-import '../data/entities/wordpair.dart';
 import '../services/wordpair_service.dart';
 
 class MyAppState extends ChangeNotifier {
