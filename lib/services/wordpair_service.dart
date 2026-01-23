@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:english_words/english_words.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -29,7 +28,7 @@ class WordPairService {
 
   /// Mengirim WordPair ke backend dengan category tertentu
   Future<void> createWordPair({
-    required WordPair pair,
+    required WordPairEntity pair,
     required String category,
   }) async {
     try {
@@ -37,8 +36,9 @@ class WordPairService {
         Uri.parse(WordPairService.baseUrl),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'firstWord': pair.first,
-          'secondWord': pair.second,
+          'firstWord': pair.firstWord,
+          'secondWord': pair.secondWord,
+          'clientId': pair.clientId,
           'category': category,
         }),
       );
@@ -114,6 +114,48 @@ class WordPairService {
       debugPrint('Error calling API: $e');
       // Return empty list jika terjadi error agar aplikasi tetap berjalan
       return [];
+    }
+  }
+
+  /// Mendapatkan data WordPair dari backend berdasarkan ID atau Client ID
+  Future<WordPairEntity> findOne({String? id, String? clientId}) async {
+    try {
+      var target = id ?? clientId;
+      final response = await http.get(
+        Uri.parse('${WordPairService.baseUrl}/$target'),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        // Parse JSON response
+        final Map<String, dynamic> json =
+            jsonDecode(response.body) as Map<String, dynamic>;
+
+        // Convert JSON menjadi WordPairEntity
+        final WordPairEntity wordPair = WordPairEntity.fromJson(json);
+
+        debugPrint('Data has been successfully retrieved: ${wordPair.id}');
+        return wordPair;
+      } else {
+        debugPrint(
+          'Error find one word pair: ${response.statusCode} - ${response.body}',
+        );
+        return WordPairEntity(
+          id: "",
+          clientId: "",
+          firstWord: "",
+          secondWord: "",
+        );
+      }
+    } catch (e) {
+      debugPrint('Error calling API: $e');
+      return WordPairEntity(
+        id: "",
+        clientId: "",
+        firstWord: "",
+        secondWord: "",
+      );
+      // Jangan throw error agar aplikasi tetap berjalan meski API gagal
     }
   }
 

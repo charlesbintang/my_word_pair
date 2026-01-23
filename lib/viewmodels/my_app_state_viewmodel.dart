@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:my_word_pair/data/entities/word_pair_entity.dart';
@@ -6,14 +8,21 @@ import '../services/wordpair_service.dart';
 
 class MyAppState extends ChangeNotifier {
   var current = WordPair.random();
+  var currentWordPairEntity = WordPairEntity(
+    id: '',
+    clientId: '',
+    firstWord: '',
+    secondWord: '',
+    category: '',
+  );
   var isNotSavedLocally = true;
 
   GlobalKey? historyListKey;
 
-  var favorites = <WordPair>[];
+  var favorites = <WordPairEntity>[];
 
   /// Histories loaded from backend (category = 'history')
-  var history = <WordPair>[];
+  var history = <WordPairEntity>[];
 
   final WordPairService _wordPairService = WordPairService();
 
@@ -23,20 +32,25 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  WordPairEntity createWordPairEntity(WordPair pair, String category) {
+    return WordPairEntity(
+      id: '',
+      clientId:
+          '${DateTime.now().millisecondsSinceEpoch}-${Random().nextInt(100000).toString()}',
+      firstWord: pair.first,
+      secondWord: pair.second,
+      category: category,
+    );
+  }
+
   /// Menghapus item dengan id tertentu melalui API
-  Future<void> deleteWordPair(WordPair pair) async {
+  Future<void> deleteWordPair(WordPairEntity pair) async {
     try {
       // Cari WordPairEntity berdasarkan firstWord dan secondWord
-      final List<WordPairEntity>
-      wordPairs = await _wordPairService.findAllWordPair(
-        params:
-            '?firstWord=${pair.first}&secondWord=${pair.second}&category=history',
+      final WordPairEntity wordPair = await _wordPairService.findOne(
+        clientId: pair.clientId,
       );
-      if (wordPairs.isEmpty) {
-        debugPrint('WordPair not found in backend: ${pair.asLowerCase}');
-        return;
-      } // Asumsikan hanya ada satu entri unik
-      final String id = wordPairs.first.id;
+      final String id = wordPair.id;
 
       await _wordPairService.deleteWordPair(id: id);
 
@@ -47,16 +61,42 @@ class MyAppState extends ChangeNotifier {
   }
 
   void getNext() {
-    history.insert(0, current);
+    currentWordPairEntity = updateWordPairEntity(
+      currentWordPairEntity,
+      'history',
+    );
+    history.insert(0, currentWordPairEntity);
     var animatedList = historyListKey?.currentState as AnimatedListState?;
     animatedList?.insertItem(0);
 
     if (isNotSavedLocally) {
       // Kirim ke backend dengan category "history"
-      _wordPairService.createWordPair(pair: current, category: 'history');
+      _wordPairService.createWordPair(
+        pair: currentWordPairEntity,
+        category: 'history',
+      );
     }
 
     current = WordPair.random();
+    currentWordPairEntity = createWordPairEntity(current, '');
+    notifyListeners();
+  }
+
+  Future<void> initializeApp() async {
+    debugPrint('Initializing app state...');
+    await loadFavorites();
+    debugPrint('Favorites loaded: ${favorites.length}');
+    await loadHistories();
+    debugPrint('Histories loaded: ${history.length}');
+    debugPrint(
+      'currentWordPairEntity before init: ${currentWordPairEntity.toJson()}',
+    );
+    currentWordPairEntity = createWordPairEntity(current, '');
+    await Future.delayed(const Duration(milliseconds: 1000));
+    debugPrint('App state initialized.');
+    debugPrint(
+      'currentWordPairEntity after init: ${currentWordPairEntity.toJson()}',
+    );
     notifyListeners();
   }
 
@@ -67,14 +107,7 @@ class MyAppState extends ChangeNotifier {
       final List<WordPairEntity> wordPairs = await _wordPairService
           .findAllWordPair(params: '?category=favorites');
 
-      // Konversi WordPairEntity ke WordPair dan filter hanya yang category="favorites"
-      final filteredFavorites = wordPairs.map((entity) {
-        // Membuat WordPair dari firstWord dan secondWord
-        // WordPair memiliki constructor yang menerima dua string
-        return WordPair(entity.firstWord, entity.secondWord);
-      }).toList();
-
-      favorites = filteredFavorites;
+      favorites = wordPairs;
       debugPrint('Loaded ${favorites.length} favorites from API');
       notifyListeners();
     } catch (e) {
@@ -89,11 +122,7 @@ class MyAppState extends ChangeNotifier {
       final List<WordPairEntity> wordPairs = await _wordPairService
           .findAllWordPair(params: '?category=history');
 
-      final filtered = wordPairs
-          .map((entity) => WordPair(entity.firstWord, entity.secondWord))
-          .toList();
-
-      history = filtered;
+      history = wordPairs;
       debugPrint('Loaded ${history.length} histories from API');
       notifyListeners();
     } catch (e) {
@@ -101,52 +130,47 @@ class MyAppState extends ChangeNotifier {
     }
   }
 
-  void removeFavorite(WordPair pair) {
+  void removeFavorite(WordPairEntity pair) {
     updateCategoryWordPairToHistory(pair);
     favorites.remove(pair);
-    debugPrint('${pair.asLowerCase} removed from favorites');
+    debugPrint('${pair.firstWord} ${pair.secondWord} removed from favorites');
     notifyListeners();
   }
 
-  void removeHistory(WordPair pair) {
+  void removeHistory(WordPairEntity pair) {
     deleteWordPair(pair);
     history.remove(pair);
     notifyListeners();
   }
 
-  void toggleFavorite({WordPair? pair}) {
-    final target = pair ?? current;
+  void toggleFavorite(WordPairEntity pair) {
+    debugPrint("target toggle favorite: ${pair.toJson()}");
 
-    if (favorites.contains(target)) {
-      updateCategoryWordPairToHistory(target);
-      favorites.remove(target);
-      debugPrint('${target.asLowerCase} removed from favorites');
+    if (favorites.any((element) => element.clientId == pair.clientId)) {
+      updateCategoryWordPairToHistory(pair);
+      favorites.remove(pair);
+      debugPrint('${pair.firstWord} ${pair.secondWord} removed from favorites');
     } else {
-      favorites.insert(0, target);
-      debugPrint('${target.asLowerCase} added to favorites');
+      pair = updateWordPairEntity(pair, 'favorites');
+      favorites.insert(0, pair);
+      debugPrint('${pair.firstWord} ${pair.secondWord} added to favorites');
 
       if (isNotSavedLocally) {
         // Kirim ke backend dengan category "favorites"
-        _wordPairService.createWordPair(pair: target, category: 'favorites');
+        _wordPairService.createWordPair(pair: pair, category: 'favorites');
       }
     }
 
     notifyListeners();
   }
 
-  Future<void> updateCategoryWordPairToHistory(WordPair pair) async {
+  Future<void> updateCategoryWordPairToHistory(WordPairEntity pair) async {
     try {
       // Cari WordPairEntity berdasarkan firstWord dan secondWord
-      final List<WordPairEntity>
-      wordPairs = await _wordPairService.findAllWordPair(
-        params:
-            '?firstWord=${pair.first}&secondWord=${pair.second}&category=favorites',
+      final WordPairEntity wordPair = await _wordPairService.findOne(
+        clientId: pair.clientId,
       );
-      if (wordPairs.isEmpty) {
-        debugPrint('WordPair not found in backend: ${pair.asLowerCase}');
-        return;
-      } // Asumsikan hanya ada satu entri unik
-      final String id = wordPairs.first.id;
+      final String id = wordPair.id;
 
       await _wordPairService.updateWordPair(id: id, category: 'history');
 
@@ -154,5 +178,15 @@ class MyAppState extends ChangeNotifier {
     } catch (e) {
       debugPrint('Error updating word pair: $e');
     }
+  }
+
+  WordPairEntity updateWordPairEntity(WordPairEntity pair, String category) {
+    return WordPairEntity(
+      id: pair.id,
+      clientId: pair.clientId,
+      firstWord: pair.firstWord,
+      secondWord: pair.secondWord,
+      category: category,
+    );
   }
 }

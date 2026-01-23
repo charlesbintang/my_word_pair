@@ -121,8 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // Memuat favorites dari API ketika home page pertama kali di-load
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final appState = context.read<MyAppState>();
-      appState.loadFavorites();
-      appState.loadHistories();
+      appState.initializeApp();
     });
   }
 }
