@@ -27,10 +27,11 @@ class WordPairService {
   }
 
   /// Mengirim WordPair ke backend dengan category tertentu
-  Future<void> createWordPair({
+  Future<WordPairEntity> createWordPair({
     required WordPairEntity pair,
     required String category,
   }) async {
+    late WordPairEntity createdPair;
     try {
       final response = await http.post(
         Uri.parse(WordPairService.baseUrl),
@@ -47,14 +48,17 @@ class WordPairService {
         debugPrint(
           'Error creating word pair: ${response.statusCode} - ${response.body}',
         );
+      } else {
+        debugPrint('Created successfully');
+        createdPair = WordPairEntity.fromJson(
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
       }
-      // else {
-      //   debugPrint('Created successfully');
-      // }
     } catch (e) {
       debugPrint('Error calling API: $e');
       // Jangan throw error agar aplikasi tetap berjalan meski API gagal
     }
+    return createdPair;
   }
 
   /// Menghapus word pair dari backend berdasarkan ID
@@ -118,11 +122,11 @@ class WordPairService {
   }
 
   /// Mendapatkan data WordPair dari backend berdasarkan ID atau Client ID
-  Future<WordPairEntity> findOne({String? id, String? clientId}) async {
+  Future<WordPairEntity> findOne(String id) async {
+    late WordPairEntity wordPair;
     try {
-      var target = id ?? clientId;
       final response = await http.get(
-        Uri.parse('${WordPairService.baseUrl}/$target'),
+        Uri.parse('${WordPairService.baseUrl}/$id'),
         headers: {'Content-Type': 'application/json'},
       );
 
@@ -132,31 +136,20 @@ class WordPairService {
             jsonDecode(response.body) as Map<String, dynamic>;
 
         // Convert JSON menjadi WordPairEntity
-        final WordPairEntity wordPair = WordPairEntity.fromJson(json);
+        final WordPairEntity gotWordPair = WordPairEntity.fromJson(json);
 
-        debugPrint('Data has been successfully retrieved: ${wordPair.id}');
-        return wordPair;
+        debugPrint('Data has been successfully retrieved: ${gotWordPair.id}');
+        wordPair = gotWordPair;
       } else {
         debugPrint(
           'Error find one word pair: ${response.statusCode} - ${response.body}',
         );
-        return WordPairEntity(
-          id: "",
-          clientId: "",
-          firstWord: "",
-          secondWord: "",
-        );
       }
     } catch (e) {
       debugPrint('Error calling API: $e');
-      return WordPairEntity(
-        id: "",
-        clientId: "",
-        firstWord: "",
-        secondWord: "",
-      );
       // Jangan throw error agar aplikasi tetap berjalan meski API gagal
     }
+    return wordPair;
   }
 
   /// Mengubah category word pair dari backend berdasarkan ID

@@ -47,9 +47,7 @@ class MyAppState extends ChangeNotifier {
   Future<void> deleteWordPair(WordPairEntity pair) async {
     try {
       // Cari WordPairEntity berdasarkan firstWord dan secondWord
-      final WordPairEntity wordPair = await _wordPairService.findOne(
-        clientId: pair.clientId,
-      );
+      final WordPairEntity wordPair = await _wordPairService.findOne(pair.id);
       final String id = wordPair.id;
 
       await _wordPairService.deleteWordPair(id: id);
@@ -143,7 +141,7 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleFavorite(WordPairEntity pair) {
+  void toggleFavorite(WordPairEntity pair) async {
     debugPrint("target toggle favorite: ${pair.toJson()}");
 
     if (favorites.any((element) => element.clientId == pair.clientId)) {
@@ -151,14 +149,16 @@ class MyAppState extends ChangeNotifier {
       favorites.remove(pair);
       debugPrint('${pair.firstWord} ${pair.secondWord} removed from favorites');
     } else {
-      pair = updateWordPairEntity(pair, 'favorites');
-      favorites.insert(0, pair);
-      debugPrint('${pair.firstWord} ${pair.secondWord} added to favorites');
-
       if (isNotSavedLocally) {
         // Kirim ke backend dengan category "favorites"
-        _wordPairService.createWordPair(pair: pair, category: 'favorites');
+        pair = await _wordPairService.createWordPair(
+          pair: pair,
+          category: 'favorites',
+        );
       }
+
+      favorites.insert(0, pair);
+      debugPrint('${pair.firstWord} ${pair.secondWord} added to favorites');
     }
 
     notifyListeners();
@@ -167,9 +167,7 @@ class MyAppState extends ChangeNotifier {
   Future<void> updateCategoryWordPairToHistory(WordPairEntity pair) async {
     try {
       // Cari WordPairEntity berdasarkan firstWord dan secondWord
-      final WordPairEntity wordPair = await _wordPairService.findOne(
-        clientId: pair.clientId,
-      );
+      final WordPairEntity wordPair = await _wordPairService.findOne(pair.id);
       final String id = wordPair.id;
 
       await _wordPairService.updateWordPair(id: id, category: 'history');
