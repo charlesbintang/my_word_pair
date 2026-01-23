@@ -47,14 +47,17 @@ class _HistoryListViewState extends State<HistoryListView> {
             child: Center(
               child: TextButton.icon(
                 onPressed: () {
-                  appState.toggleFavorite(pair: pair);
+                  appState.toggleFavorite(pair);
                 },
-                icon: appState.favorites.contains(pair)
+                icon:
+                    appState.favorites.any(
+                      (element) => element.clientId == pair.clientId,
+                    )
                     ? Icon(Icons.favorite, size: 12)
                     : SizedBox(),
                 label: Text(
-                  "${pair.first.toLowerCase()} ${pair.second.toLowerCase()}",
-                  semanticsLabel: "${pair.first} ${pair.second}",
+                  "${pair.firstWord.toLowerCase()} ${pair.secondWord.toLowerCase()}",
+                  semanticsLabel: "${pair.firstWord} ${pair.secondWord}",
                 ),
               ),
             ),
@@ -64,4 +67,3 @@ class _HistoryListViewState extends State<HistoryListView> {
     );
   }
 }
-

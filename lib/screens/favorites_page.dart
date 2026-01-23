@@ -46,8 +46,8 @@ class FavoritesPage extends StatelessWidget {
                         },
                       ),
                       title: Text(
-                        "${pair.first.toLowerCase()} ${pair.second.toLowerCase()}",
-                        semanticsLabel: "${pair.first} ${pair.second}",
+                        "${pair.firstWord.toLowerCase()} ${pair.secondWord.toLowerCase()}",
+                        semanticsLabel: "${pair.firstWord} ${pair.secondWord}",
                       ),
                     ),
                 ],

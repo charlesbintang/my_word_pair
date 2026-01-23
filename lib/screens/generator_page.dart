@@ -12,9 +12,12 @@ class GeneratorPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     var pair = appState.current;
+    var pairEntity = appState.currentWordPairEntity;
 
     IconData favoriteIcon;
-    if (appState.favorites.contains(pair)) {
+    if (appState.favorites.any(
+      (element) => element.clientId == pairEntity.clientId,
+    )) {
       favoriteIcon = Icons.favorite;
     } else {
       favoriteIcon = Icons.favorite_border;
@@ -71,7 +74,7 @@ class GeneratorPage extends StatelessWidget {
             children: [
               ElevatedButton.icon(
                 onPressed: () {
-                  appState.toggleFavorite(pair: null);
+                  appState.toggleFavorite(pairEntity);
                 },
                 icon: Icon(favoriteIcon),
                 label: Text('Like'),

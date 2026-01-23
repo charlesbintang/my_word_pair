@@ -1,5 +1,5 @@
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:my_word_pair/data/entities/word_pair_entity.dart';
 import 'package:provider/provider.dart';
 
 import '../viewmodels/my_app_state_viewmodel.dart';
@@ -51,19 +51,21 @@ class HistoryPage extends StatelessWidget {
                         },
                       ),
                       title: Text(
-                        "${pair.first.toLowerCase()} ${pair.second.toLowerCase()}",
-                        semanticsLabel: "${pair.first} ${pair.second}",
+                        "${pair.firstWord.toLowerCase()} ${pair.secondWord.toLowerCase()}",
+                        semanticsLabel: "${pair.firstWord} ${pair.secondWord}",
                       ),
                       trailing: IconButton(
                         icon: Icon(
-                          appState.favorites.contains(pair)
+                          appState.favorites.any(
+                                (element) => element.clientId == pair.clientId,
+                              )
                               ? Icons.favorite
                               : Icons.favorite_border,
                           semanticLabel: 'Like',
                         ),
                         color: theme.colorScheme.primary,
                         onPressed: () {
-                          appState.toggleFavorite(pair: pair);
+                          appState.toggleFavorite(pair);
                         },
                       ),
                     ),
@@ -79,7 +81,7 @@ class HistoryPage extends StatelessWidget {
   void _showDeleteConfirmationDialog(
     BuildContext context,
     MyAppState appState,
-    WordPair pair,
+    WordPairEntity pair,
   ) {
     showDialog(
       context: context,
@@ -99,7 +101,7 @@ class HistoryPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  "${pair.first.toLowerCase()} ${pair.second.toLowerCase()}",
+                  "${pair.firstWord.toLowerCase()} ${pair.secondWord.toLowerCase()}",
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
