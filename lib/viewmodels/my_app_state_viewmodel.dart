@@ -58,22 +58,18 @@ class MyAppState extends ChangeNotifier {
     }
   }
 
-  void getNext() {
-    currentWordPairEntity = updateWordPairEntity(
-      currentWordPairEntity,
-      'history',
-    );
-    history.insert(0, currentWordPairEntity);
-    var animatedList = historyListKey?.currentState as AnimatedListState?;
-    animatedList?.insertItem(0);
-
+  void getNext() async {
     if (isNotSavedLocally) {
       // Kirim ke backend dengan category "history"
-      _wordPairService.createWordPair(
+      currentWordPairEntity = await _wordPairService.createWordPair(
         pair: currentWordPairEntity,
         category: 'history',
       );
     }
+
+    history.insert(0, currentWordPairEntity);
+    var animatedList = historyListKey?.currentState as AnimatedListState?;
+    animatedList?.insertItem(0);
 
     current = WordPair.random();
     currentWordPairEntity = createWordPairEntity(current, '');
@@ -141,24 +137,34 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleFavorite(WordPairEntity pair) async {
-    debugPrint("target toggle favorite: ${pair.toJson()}");
+  void toggleFavorite(WordPairEntity? pair) async {
+    var target = pair ?? currentWordPairEntity;
+    debugPrint("target toggle favorite: ${target.toJson()}");
 
-    if (favorites.any((element) => element.clientId == pair.clientId)) {
-      updateCategoryWordPairToHistory(pair);
-      favorites.remove(pair);
-      debugPrint('${pair.firstWord} ${pair.secondWord} removed from favorites');
+    if (favorites.any((element) => element.clientId == target.clientId)) {
+      updateCategoryWordPairToHistory(target);
+      favorites.remove(target);
+      debugPrint(
+        '${target.firstWord} ${target.secondWord} removed from favorites',
+      );
     } else {
       if (isNotSavedLocally) {
         // Kirim ke backend dengan category "favorites"
-        pair = await _wordPairService.createWordPair(
-          pair: pair,
+        target = await _wordPairService.createWordPair(
+          pair: target,
           category: 'favorites',
         );
       }
 
-      favorites.insert(0, pair);
-      debugPrint('${pair.firstWord} ${pair.secondWord} added to favorites');
+      if (pair == null) {
+        currentWordPairEntity = target;
+        debugPrint(
+          'currentWordPairEntity updated: ${currentWordPairEntity.toJson()}',
+        );
+      }
+
+      favorites.insert(0, target);
+      debugPrint('${target.firstWord} ${target.secondWord} added to favorites');
     }
 
     notifyListeners();
