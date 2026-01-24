@@ -142,11 +142,15 @@ class MyAppState extends ChangeNotifier {
     debugPrint("target toggle favorite: ${target.toJson()}");
 
     if (favorites.any((element) => element.clientId == target.clientId)) {
+      debugPrint("target found in favorites, removing...");
       updateCategoryWordPairToHistory(target);
-      favorites.remove(target);
+      debugPrint('Updating category to history for ${target.toJson()}');
+      favorites.removeWhere((element) => element.clientId == target.clientId);
+      debugPrint('Target removed from favorites list');
       debugPrint(
         '${target.firstWord} ${target.secondWord} removed from favorites',
       );
+      debugPrint(favorites.toString());
     } else {
       if (isNotSavedLocally) {
         // Kirim ke backend dengan category "favorites"
@@ -177,6 +181,7 @@ class MyAppState extends ChangeNotifier {
       final String id = wordPair.id;
 
       await _wordPairService.updateWordPair(id: id, category: 'history');
+      debugPrint('Updated category to history for word pair: ${pair.toJson()}');
 
       notifyListeners();
     } catch (e) {
