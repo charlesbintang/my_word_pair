@@ -125,13 +125,13 @@ class MyAppState extends ChangeNotifier {
   }
 
   void removeFavorite(WordPairEntity pair) {
-    updateCategoryWordPairToHistory(pair);
     favorites.remove(pair);
     debugPrint('${pair.firstWord} ${pair.secondWord} removed from favorites');
     notifyListeners();
   }
 
   void removeHistory(WordPairEntity pair) {
+    debugPrint('Removing history: ${pair.toJson()}');
     deleteWordPair(pair);
     history.remove(pair);
     notifyListeners();
@@ -143,7 +143,6 @@ class MyAppState extends ChangeNotifier {
 
     if (favorites.any((element) => element.clientId == target.clientId)) {
       debugPrint("target found in favorites, removing...");
-      updateCategoryWordPairToHistory(target);
       debugPrint('Updating category to history for ${target.toJson()}');
       favorites.removeWhere((element) => element.clientId == target.clientId);
       debugPrint('Target removed from favorites list');
@@ -174,20 +173,20 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateCategoryWordPairToHistory(WordPairEntity pair) async {
-    try {
-      // Cari WordPairEntity berdasarkan firstWord dan secondWord
-      final WordPairEntity wordPair = await _wordPairService.findOne(pair.id);
-      final String id = wordPair.id;
+  // Future<void> updateCategoryWordPairToHistory(WordPairEntity pair) async {
+  //   try {
+  //     // Cari WordPairEntity berdasarkan firstWord dan secondWord
+  //     final WordPairEntity wordPair = await _wordPairService.findOne(pair.id);
+  //     final String id = wordPair.id;
 
-      await _wordPairService.updateWordPair(id: id, category: 'history');
-      debugPrint('Updated category to history for word pair: ${pair.toJson()}');
+  //     await _wordPairService.updateWordPair(id: id, category: 'history');
+  //     debugPrint('Updated category to history for word pair: ${pair.toJson()}');
 
-      notifyListeners();
-    } catch (e) {
-      debugPrint('Error updating word pair: $e');
-    }
-  }
+  //     notifyListeners();
+  //   } catch (e) {
+  //     debugPrint('Error updating word pair: $e');
+  //   }
+  // }
 
   WordPairEntity updateWordPairEntity(WordPairEntity pair, String category) {
     return WordPairEntity(
