@@ -13,7 +13,6 @@ class MyAppState extends ChangeNotifier {
     secondWord: '',
     category: '',
   );
-  var isNotSavedLocally = true;
 
   GlobalKey? historyListKey;
 
@@ -21,12 +20,6 @@ class MyAppState extends ChangeNotifier {
 
   /// Histories loaded from backend (category = 'history')
   var history = <WordPairEntity>[];
-
-  void changeSaveMethod() {
-    isNotSavedLocally = !isNotSavedLocally;
-
-    notifyListeners();
-  }
 
   WordPairEntity createWordPairEntity(WordPair pair, String category) {
     return WordPairEntity(
