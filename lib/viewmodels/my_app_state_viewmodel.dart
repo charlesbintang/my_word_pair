@@ -49,48 +49,48 @@ class MyAppState extends ChangeNotifier {
     currentWordPairEntity = createWordPairEntity(current, '');
     // Removed artificial delay to avoid leaving a pending Timer
     // when running widget tests (which fail if timers remain).
-    debugPrint('App state initialized.');
-    debugPrint(
-      'currentWordPairEntity after init: ${currentWordPairEntity.toJson()}',
-    );
+    // debugPrint('App state initialized.');
+    // debugPrint(
+    //   'currentWordPairEntity after init: ${currentWordPairEntity.toJson()}',
+    // );
     notifyListeners();
   }
 
   void removeFavorite(WordPairEntity pair) {
     favorites.remove(pair);
-    debugPrint('${pair.firstWord} ${pair.secondWord} removed from favorites');
+    // debugPrint('${pair.firstWord} ${pair.secondWord} removed from favorites');
     notifyListeners();
   }
 
   void removeHistory(WordPairEntity pair) {
-    debugPrint('Removing history: ${pair.toJson()}');
+    // debugPrint('Removing history: ${pair.toJson()}');
     history.remove(pair);
     notifyListeners();
   }
 
   void toggleFavorite(WordPairEntity? pair) async {
     var target = pair ?? currentWordPairEntity;
-    debugPrint("target toggle favorite: ${target.toJson()}");
+    // debugPrint("target toggle favorite: ${target.toJson()}");
 
     if (favorites.any((element) => element.clientId == target.clientId)) {
-      debugPrint("target found in favorites, removing...");
-      debugPrint('Updating category to history for ${target.toJson()}');
+      // debugPrint("target found in favorites, removing...");
+      // debugPrint('Updating category to history for ${target.toJson()}');
       favorites.removeWhere((element) => element.clientId == target.clientId);
-      debugPrint('Target removed from favorites list');
-      debugPrint(
-        '${target.firstWord} ${target.secondWord} removed from favorites',
-      );
-      debugPrint(favorites.toString());
+      // debugPrint('Target removed from favorites list');
+      // debugPrint(
+      //   '${target.firstWord} ${target.secondWord} removed from favorites',
+      // );
+      // debugPrint(favorites.toString());
     } else {
       if (pair == null) {
         currentWordPairEntity = target;
-        debugPrint(
-          'currentWordPairEntity updated: ${currentWordPairEntity.toJson()}',
-        );
+        // debugPrint(
+        //   'currentWordPairEntity updated: ${currentWordPairEntity.toJson()}',
+        // );
       }
 
       favorites.insert(0, target);
-      debugPrint('${target.firstWord} ${target.secondWord} added to favorites');
+      // debugPrint('${target.firstWord} ${target.secondWord} added to favorites');
     }
 
     notifyListeners();
