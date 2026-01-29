@@ -29,7 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
         page = FavoritesPage(key: ValueKey('favorites'));
         break;
       case 2:
-        page = HistoryPage(key: ValueKey('history'));
+        page = HistoryPage(key: ValueKey('histories'));
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
