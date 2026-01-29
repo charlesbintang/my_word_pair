@@ -43,11 +43,12 @@ class MyAppState extends ChangeNotifier {
   }
 
   Future<void> initializeApp() async {
-    debugPrint(
-      'currentWordPairEntity before init: ${currentWordPairEntity.toJson()}',
-    );
+    // debugPrint(
+    //   'currentWordPairEntity before init: ${currentWordPairEntity.toJson()}',
+    // );
     currentWordPairEntity = createWordPairEntity(current, '');
-    await Future.delayed(const Duration(milliseconds: 1000));
+    // Removed artificial delay to avoid leaving a pending Timer
+    // when running widget tests (which fail if timers remain).
     debugPrint('App state initialized.');
     debugPrint(
       'currentWordPairEntity after init: ${currentWordPairEntity.toJson()}',
