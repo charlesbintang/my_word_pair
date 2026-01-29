@@ -45,44 +45,44 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
 
-    return Scaffold(
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          if (constraints.maxWidth < 450) {
-            // Use a more mobile-friendly layout with BottomNavigationBar
-            // on narrow screens.
-            return Column(
-              children: [
-                Expanded(child: mainArea),
-                BottomNavigationBar(
-                  items: [
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.home),
-                      label: 'Home',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.favorite),
-                      label: 'Favorites',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.history),
-                      label: 'History',
-                    ),
-                  ],
-                  currentIndex: selectedIndex,
-                  onTap: (value) {
-                    setState(() {
-                      selectedIndex = value;
-                    });
-                  },
-                ),
-              ],
-            );
-          } else {
-            return Row(
-              children: [
-                SafeArea(
-                  child: NavigationRail(
+    return SafeArea(
+      child: Scaffold(
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth < 450) {
+              // Use a more mobile-friendly layout with BottomNavigationBar
+              // on narrow screens.
+              return Column(
+                children: [
+                  Expanded(child: mainArea),
+                  BottomNavigationBar(
+                    items: [
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.home),
+                        label: 'Home',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.favorite),
+                        label: 'Favorites',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.history),
+                        label: 'History',
+                      ),
+                    ],
+                    currentIndex: selectedIndex,
+                    onTap: (value) {
+                      setState(() {
+                        selectedIndex = value;
+                      });
+                    },
+                  ),
+                ],
+              );
+            } else {
+              return Row(
+                children: [
+                  NavigationRail(
                     extended: constraints.maxWidth >= 600,
                     destinations: [
                       NavigationRailDestination(
@@ -105,12 +105,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       });
                     },
                   ),
-                ),
-                Expanded(child: mainArea),
-              ],
-            );
-          }
-        },
+                  Expanded(child: mainArea),
+                ],
+              );
+            }
+          },
+        ),
       ),
     );
   }
