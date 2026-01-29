@@ -45,72 +45,73 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
 
-    return SafeArea(
-      child: Scaffold(
-        body: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth < 450) {
-              // Use a more mobile-friendly layout with BottomNavigationBar
-              // on narrow screens.
-              return Column(
-                children: [
-                  Expanded(child: mainArea),
-                  BottomNavigationBar(
-                    items: [
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.home),
-                        label: 'Home',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.favorite),
-                        label: 'Favorites',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.history),
-                        label: 'History',
-                      ),
-                    ],
-                    currentIndex: selectedIndex,
-                    onTap: (value) {
-                      setState(() {
-                        selectedIndex = value;
-                      });
-                    },
-                  ),
-                ],
-              );
-            } else {
-              return Row(
-                children: [
-                  NavigationRail(
-                    extended: constraints.maxWidth >= 600,
-                    destinations: [
-                      NavigationRailDestination(
-                        icon: Icon(Icons.home),
-                        label: Text('Home'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.favorite),
-                        label: Text('Favorites'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.history),
-                        label: Text('History'),
-                      ),
-                    ],
-                    selectedIndex: selectedIndex,
-                    onDestinationSelected: (value) {
-                      setState(() {
-                        selectedIndex = value;
-                      });
-                    },
-                  ),
-                  Expanded(child: mainArea),
-                ],
-              );
-            }
-          },
-        ),
+    return Scaffold(
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth < 450) {
+            // Use a more mobile-friendly layout with BottomNavigationBar
+            // on narrow screens.
+            return Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: constraints.maxHeight * 0.04),
+                ),
+                Expanded(child: mainArea),
+                BottomNavigationBar(
+                  items: [
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.home),
+                      label: 'Home',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.favorite),
+                      label: 'Favorites',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.history),
+                      label: 'History',
+                    ),
+                  ],
+                  currentIndex: selectedIndex,
+                  onTap: (value) {
+                    setState(() {
+                      selectedIndex = value;
+                    });
+                  },
+                ),
+              ],
+            );
+          } else {
+            return Row(
+              children: [
+                NavigationRail(
+                  extended: constraints.maxWidth >= 600,
+                  destinations: [
+                    NavigationRailDestination(
+                      icon: Icon(Icons.home),
+                      label: Text('Home'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.favorite),
+                      label: Text('Favorites'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.history),
+                      label: Text('History'),
+                    ),
+                  ],
+                  selectedIndex: selectedIndex,
+                  onDestinationSelected: (value) {
+                    setState(() {
+                      selectedIndex = value;
+                    });
+                  },
+                ),
+                Expanded(child: mainArea),
+              ],
+            );
+          }
+        },
       ),
     );
   }
