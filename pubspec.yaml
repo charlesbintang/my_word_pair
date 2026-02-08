@@ -1,5 +1,5 @@
 name: my_word_pair
-description: "A new Flutter project."
+description: "Get random word pairs and save your favorites."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -55,6 +55,24 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "lib/assets/icons/my_word_pair_launcher_icon_flutter.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "lib/assets/icons/my_word_pair_launcher_icon_flutter.png"
+    background_color: "#hexcode"
+    theme_color: "#hexcode"
+  windows:
+    generate: true
+    image_path: "lib/assets/icons/my_word_pair_launcher_icon_flutter.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "lib/assets/icons/my_word_pair_launcher_icon_flutter.png"
+
 # The following section is specific to Flutter packages.
 flutter:
 
@@ -66,6 +84,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - .env
+    - lib/assets/icons/my_word_pair_launcher_icon_flutter.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
