@@ -63,8 +63,8 @@ flutter_launcher_icons:
   web:
     generate: true
     image_path: "lib/assets/icons/my_word_pair_launcher_icon_flutter.png"
-    background_color: "#hexcode"
-    theme_color: "#hexcode"
+    background_color: "#FFFFFF"
+    theme_color: "#FFFFFF"
   windows:
     generate: true
     image_path: "lib/assets/icons/my_word_pair_launcher_icon_flutter.png"
