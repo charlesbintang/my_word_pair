@@ -16,64 +16,55 @@ class HistoryPage extends StatelessWidget {
       return Center(child: const Text('No history yet.'));
     }
 
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text("You have ${appState.history.length} history items:"),
-            ),
-            Expanded(
-              child: GridView(
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 500,
-                  childAspectRatio: 500 / 80,
-                ),
-                children: [
-                  for (var pair in appState.history)
-                    ListTile(
-                      leading: IconButton(
-                        icon: Icon(
-                          Icons.delete_outline,
-                          semanticLabel: 'Delete',
-                        ),
-                        color: theme.colorScheme.primary,
-                        onPressed: () {
-                          _showDeleteConfirmationDialog(
-                            context,
-                            appState,
-                            pair,
-                          );
-                        },
-                      ),
-                      title: Text(
-                        "${pair.firstWord.toLowerCase()} ${pair.secondWord.toLowerCase()}",
-                        semanticsLabel: "${pair.firstWord} ${pair.secondWord}",
-                      ),
-                      trailing: IconButton(
-                        icon: Icon(
-                          appState.favorites.any(
-                                (element) => element.clientId == pair.clientId,
-                              )
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          semanticLabel: 'Like',
-                        ),
-                        color: theme.colorScheme.primary,
-                        onPressed: () {
-                          appState.toggleFavorite(pair);
-                        },
-                      ),
-                    ),
-                ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text("You have ${appState.history.length} history items:"),
+          ),
+          Expanded(
+            child: GridView(
+              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 500,
+                childAspectRatio: 500 / 80,
               ),
+              children: [
+                for (var pair in appState.history)
+                  ListTile(
+                    leading: IconButton(
+                      icon: Icon(Icons.delete_outline, semanticLabel: 'Delete'),
+                      color: theme.colorScheme.primary,
+                      onPressed: () {
+                        _showDeleteConfirmationDialog(context, appState, pair);
+                      },
+                    ),
+                    title: Text(
+                      "${pair.firstWord.toLowerCase()} ${pair.secondWord.toLowerCase()}",
+                      semanticsLabel: "${pair.firstWord} ${pair.secondWord}",
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(
+                        appState.favorites.any(
+                              (element) => element.clientId == pair.clientId,
+                            )
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        semanticLabel: 'Like',
+                      ),
+                      color: theme.colorScheme.primary,
+                      onPressed: () {
+                        appState.toggleFavorite(pair);
+                      },
+                    ),
+                  ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

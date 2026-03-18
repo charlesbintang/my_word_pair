@@ -45,17 +45,17 @@ class WordPairService {
       );
 
       if (response.statusCode != 201) {
-        debugPrint(
-          'Error creating word pair: ${response.statusCode} - ${response.body}',
-        );
+        // debugPrint(
+        //   'Error creating word pair: ${response.statusCode} - ${response.body}',
+        // );
       } else {
-        debugPrint('Created successfully');
+        // debugPrint('Created successfully');
         createdPair = WordPairEntity.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       }
     } catch (e) {
-      debugPrint('Error calling API: $e');
+      // debugPrint('Error calling API: $e');
       // Jangan throw error agar aplikasi tetap berjalan meski API gagal
     }
     return createdPair;
@@ -70,12 +70,12 @@ class WordPairService {
       );
 
       if (response.statusCode != 204) {
-        debugPrint(
-          'Error deleting word pair: ${response.statusCode} - ${response.body}',
-        );
+        // debugPrint(
+        //   'Error deleting word pair: ${response.statusCode} - ${response.body}',
+        // )
       }
     } catch (e) {
-      debugPrint('Error calling API: $e');
+      // debugPrint('Error calling API: $e');
       // Jangan throw error agar aplikasi tetap berjalan meski API gagal
     }
   }
@@ -104,18 +104,18 @@ class WordPairService {
             )
             .toList();
 
-        debugPrint(
-          'All data has been successfully retrieved: ${wordPairs.length} items',
-        );
+        // debugPrint(
+        //   'All data has been successfully retrieved: ${wordPairs.length} items',
+        // );
         return wordPairs;
       } else {
-        debugPrint(
-          'Error find all word pair: ${response.statusCode} - ${response.body}',
-        );
+        // debugPrint(
+        //   'Error find all word pair: ${response.statusCode} - ${response.body}',
+        // );
         return [];
       }
     } catch (e) {
-      debugPrint('Error calling API: $e');
+      // debugPrint('Error calling API: $e');
       // Return empty list jika terjadi error agar aplikasi tetap berjalan
       return [];
     }
@@ -138,15 +138,15 @@ class WordPairService {
         // Convert JSON menjadi WordPairEntity
         final WordPairEntity gotWordPair = WordPairEntity.fromJson(json);
 
-        debugPrint('Data has been successfully retrieved: ${gotWordPair.id}');
+        // debugPrint('Data has been successfully retrieved: ${gotWordPair.id}');
         wordPair = gotWordPair;
       } else {
-        debugPrint(
-          'Error find one word pair: ${response.statusCode} - ${response.body}',
-        );
+        // debugPrint(
+        //   'Error find one word pair: ${response.statusCode} - ${response.body}',
+        // );
       }
     } catch (e) {
-      debugPrint('Error calling API: $e');
+      // debugPrint('Error calling API: $e');
       // Jangan throw error agar aplikasi tetap berjalan meski API gagal
     }
     return wordPair;
@@ -165,12 +165,12 @@ class WordPairService {
       );
 
       if (response.statusCode != 200) {
-        debugPrint(
-          'Error update word pair: ${response.statusCode} - ${response.body}',
-        );
+        // debugPrint(
+        //   'Error update word pair: ${response.statusCode} - ${response.body}',
+        // );
       }
     } catch (e) {
-      debugPrint('Error calling API: $e');
+      // debugPrint('Error calling API: $e');
       // Jangan throw error agar aplikasi tetap berjalan meski API gagal
     }
   }

@@ -23,49 +23,11 @@ class GeneratorPage extends StatelessWidget {
       favoriteIcon = Icons.favorite_border;
     }
 
-    IconData localIcon;
-    if (appState.isNotSavedLocally) {
-      localIcon = Icons.wifi;
-    } else {
-      localIcon = Icons.wifi_off;
-    }
-
-    String localText;
-    if (appState.isNotSavedLocally) {
-      localText = "Saved to Cloud Storage";
-    } else {
-      localText = "Saved to Local Storage";
-    }
-
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-            flex: 3,
-            child: Stack(
-              children: [
-                HistoryListView(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          appState.changeSaveMethod();
-
-                          debugPrint(appState.isNotSavedLocally.toString());
-                        },
-                        icon: Icon(localIcon),
-                        label: Text(localText),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+          Expanded(flex: 3, child: Stack(children: [HistoryListView()])),
           SizedBox(height: 10),
           BigCard(pair: pair),
           SizedBox(height: 10),

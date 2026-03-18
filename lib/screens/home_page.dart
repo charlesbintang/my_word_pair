@@ -29,7 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
         page = FavoritesPage(key: ValueKey('favorites'));
         break;
       case 2:
-        page = HistoryPage(key: ValueKey('history'));
+        page = HistoryPage(key: ValueKey('histories'));
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
@@ -53,6 +53,9 @@ class _MyHomePageState extends State<MyHomePage> {
             // on narrow screens.
             return Column(
               children: [
+                Padding(
+                  padding: EdgeInsets.only(top: constraints.maxHeight * 0.04),
+                ),
                 Expanded(child: mainArea),
                 BottomNavigationBar(
                   items: [
@@ -81,30 +84,28 @@ class _MyHomePageState extends State<MyHomePage> {
           } else {
             return Row(
               children: [
-                SafeArea(
-                  child: NavigationRail(
-                    extended: constraints.maxWidth >= 600,
-                    destinations: [
-                      NavigationRailDestination(
-                        icon: Icon(Icons.home),
-                        label: Text('Home'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.favorite),
-                        label: Text('Favorites'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.history),
-                        label: Text('History'),
-                      ),
-                    ],
-                    selectedIndex: selectedIndex,
-                    onDestinationSelected: (value) {
-                      setState(() {
-                        selectedIndex = value;
-                      });
-                    },
-                  ),
+                NavigationRail(
+                  extended: constraints.maxWidth >= 600,
+                  destinations: [
+                    NavigationRailDestination(
+                      icon: Icon(Icons.home),
+                      label: Text('Home'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.favorite),
+                      label: Text('Favorites'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.history),
+                      label: Text('History'),
+                    ),
+                  ],
+                  selectedIndex: selectedIndex,
+                  onDestinationSelected: (value) {
+                    setState(() {
+                      selectedIndex = value;
+                    });
+                  },
                 ),
                 Expanded(child: mainArea),
               ],

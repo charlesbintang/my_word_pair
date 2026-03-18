@@ -164,4 +164,51 @@ void main() {
     // Should show "No favorites yet" message initially
     expect(find.text('No favorites yet.'), findsOneWidget);
   });
+
+  testWidgets('Navigation to Histories page works', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
+
+    // Find navigation bar or rail
+    final navBar = find.byType(BottomNavigationBar);
+    final navRail = find.byType(NavigationRail);
+
+    if (navBar.evaluate().isNotEmpty) {
+      // Mobile layout - tap third item in BottomNavigationBar (index 2)
+      // Find the history icon within the BottomNavigationBar
+      final historyInNav = find.descendant(
+        of: navBar,
+        matching: find.byIcon(Icons.history),
+      );
+      expect(historyInNav, findsOneWidget);
+      await tester.tap(historyInNav);
+    } else if (navRail.evaluate().isNotEmpty) {
+      // Desktop layout - tap third destination in NavigationRail
+      final historyInNav = find.descendant(
+        of: navRail,
+        matching: find.byIcon(Icons.history),
+      );
+      expect(historyInNav, findsOneWidget);
+      await tester.tap(historyInNav);
+    } else {
+      // Fallback: try to find by text "Histories"
+      final historiesText = find.text('Histories');
+      if (historiesText.evaluate().isNotEmpty) {
+        await tester.tap(historiesText);
+      } else {
+        // Last resort: tap any history icon
+        final allHistory = find.byIcon(Icons.history);
+        if (allHistory.evaluate().isNotEmpty) {
+          await tester.tap(allHistory.first);
+        }
+      }
+    }
+
+    await tester.pumpAndSettle();
+
+    // Should show "No history yet" message initially
+    expect(find.text('No history yet.'), findsOneWidget);
+  });
 }
